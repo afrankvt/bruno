@@ -123,6 +123,8 @@ internal class LogStore : Store
     segs := listSegments
     if (segs.size < 3) return Future { it.complete(null) }
 
+    // TODO FIXIT: if (cur-list == 1) already merged; return 'ok'
+
     // create lockfile; gets removed in LogMerge
     mergeLock.create
 

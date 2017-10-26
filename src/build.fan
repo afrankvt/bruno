@@ -17,7 +17,7 @@ class Build : BuildPod
   new make()
   {
     podName = "bruno"
-    summary = "Bruno Database"
+    summary = "BrunoDB key-value store"
     version = Version("1.0")
     depends = ["sys 1.0", "util 1.0", "concurrent 1.0",]
     srcDirs = [`fan/`, `test/`]
