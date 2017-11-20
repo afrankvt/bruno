@@ -196,7 +196,7 @@ internal class LogStore : Store
       }
 
       // verification passed, commit merge, and remove old segments
-      mfile.rename("data.${ext}")
+      mfile = mfile.rename("data.${ext}")
       inactive.each |f| { f.delete }
 
       t2 := Duration.now
