@@ -103,7 +103,7 @@ internal class LogSegment
               case tcTime:
                 val = Time(buf.read, buf.read, buf.read)
               case tcDT:
-                val = DateTime.makeTicks(buf.readS8)
+                val = DateTime.makeTicks(buf.readS8, TimeZone.utc)
               default: throw ArgErr("Unknown type '0x${tc.toHex(2)}'")
             }
 
