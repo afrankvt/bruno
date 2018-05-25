@@ -56,8 +56,8 @@ internal class Bucket
   Rec update(Rec rec, Str:Obj? tags)
   {
     // verify rec exists
-    if (map.get(rec.id) == null)
-      throw ArgErr("$name: Rec not found { id=$rec.id }")
+    old := map.get(rec.id)
+    if (old == null) throw ArgErr("$name: Rec not found { id=$rec.id }")
 
     // merge tags
     copy := rec.tags.rw
@@ -66,7 +66,10 @@ internal class Bucket
       if (v == null) copy.remove(k)
       else copy[k] = v
     }
-    mod := Rec(rec.id, rec.ver+1, copy)
+
+    // TODO: do we concurrent force ver checks here?
+    // use old.ver so ver never goes backwards
+    mod := Rec(rec.id, old.ver+1, copy)
 
     // commit to store first in case it fails
     store.write("update", name, mod, null) // tags) TODO
