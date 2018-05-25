@@ -33,6 +33,21 @@
   ** Tag values for this rec.
   const Str:Obj tags
 
+  ** Return a new Map instance which combines `id` and `ver` with `tags`.
+  ** The 'id' and 'ver' values get keyed as "__id" and "__ver" to avoid
+  ** naming collisions.
+  @NoDoc Str:Obj _toMap()
+  {
+// TODO: this is maybe a bit confusing with ^^^ tags; sorta thinking a better
+// design is to standardize on __x as "transient" tags which are never persisted
+// on disk; and them just always include __id, __ver?  Might make stuff like
+// tags.each { ... } more awkward; not sure...
+    Str:Obj[:]
+      .add("__id",  id)
+      .add("__ver", ver)
+      .addAll(tags)
+  }
+
   ** Convenience for `tags.containsKey`.
   Bool has(Str name) { tags.containsKey(name) }
 
