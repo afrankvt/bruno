@@ -23,11 +23,11 @@
     this.tags = tags
   }
 
-  ** Unique id for this rec within a `Bucket`.
+  ** Unique id for this rec within a 'Bucket'.
   const Int id
 
   ** Version of this rec.  Each modification to this rec
-  ** inside a `Bucket` will increment this value.
+  ** inside a 'Bucket' will increment this value.
   const Int ver
 
   ** Tag values for this rec.
@@ -48,10 +48,10 @@
       .addAll(tags)
   }
 
-  ** Convenience for `tags.containsKey`.
+  ** Convenience for 'tags.containsKey'.
   Bool has(Str name) { tags.containsKey(name) }
 
-  ** Convenience for `tags.get`
+  ** Convenience for 'tags.get'
   @Operator Obj? get(Str name) { tags[name] }
 
   ** Trap operartor is overriden to work as convience for `get`:

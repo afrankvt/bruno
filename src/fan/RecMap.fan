@@ -50,7 +50,7 @@
     root==null ? null : root.get(0, id)
   }
 
-  ** Return a new map with the given 'rec' added by `rec.id`,
+  ** Return a new map with the given 'rec' added by 'rec.id',
   ** or throw Err if 'id' already exists.
   RecMap add(Rec rec)
   {

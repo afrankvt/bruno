@@ -131,11 +131,15 @@ const class Bruno
     actor.send(m).get(10sec)
   }
 
+  **
   ** Find the first record in given bucket where 'tag' equals 'val',
-  ** or 'null' for not matches.
-  Rec? find(Str bucket, Str tag, Obj val)
+  ** or 'null' for not matches. Supported options:
+  **
+  **   - '"nocase":true' - check if strings are equal ignoring case
+  **
+  Rec? find(Str bucket, Str tag, Obj val, [Str:Obj]? opts := null)
   {
-    m := DbMsg("find", bucket) { it.tag=tag; it.val=val }
+    m := DbMsg("find", bucket) { it.tag=tag; it.val=val; it.opts=opts?.toImmutable }
     return actor.send(m).get(10sec)
   }
 
@@ -176,7 +180,7 @@ const class Bruno
       case "add":     return store.bucket(m.name, true).add(m.id, m.tags)
       case "update":  return store.bucket(m.name).update(m.rec, m.tags)
       case "remove":  store.bucket(m.name).remove(m.rec)
-      case "find":    return store.bucket(m.name).find(m.tag, m.val)
+      case "find":    return store.bucket(m.name).find(m.tag, m.val, m.opts)
       // case "findAll": return _list(m.name).findAll(m.tag, m.val)
       case "compact": return store.compact(pool)
     }
@@ -211,4 +215,5 @@ internal const class DbMsg
   const [Str:Obj?]? tags
   const Str? tag
   const Obj? val
+  const [Str:Obj]? opts
 }

@@ -11,7 +11,7 @@ using concurrent
 **
 ** PerfTest
 **
-class PerfTest
+@NoDoc class PerfTest
 {
   Void main()
   {

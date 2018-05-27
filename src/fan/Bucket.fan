@@ -94,12 +94,30 @@ internal class Bucket
   }
 
   ** Find all recs where 'tag' matches 'val'.
-  Rec? find(Str tag, Obj val)
+  Rec? find(Str tag, Obj val, [Str:Obj]? opts)
   {
+    nocase := false
+
+    if (opts != null)
+    {
+      nocase = opts["nocase"] == true
+    }
+
     // TODO: cache/index to avoid linear scans
     // TODO: add eachWhile; or find directly on RecMap
     Rec? found
-    map.each |r| { if (r[tag] == val) found = r }
+    map.each |r|
+    {
+      test := r[tag]
+      if (nocase && test is Str && val is Str)
+      {
+        if (((Str)test).equalsIgnoreCase(val)) found = r
+      }
+      else
+      {
+        if (test == val) found = r
+      }
+    }
     return found
   }
 

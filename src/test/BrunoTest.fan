@@ -216,6 +216,23 @@ class BrunoTest : Test
     db.close
   }
 
+  Void testFindOpts()
+  {
+    db := Bruno(tempDir) { log.level = LogLevel.debug }
+    db.open
+
+    a1 := db.add("a", ["int":11, "str":"FooBar"])
+    a2 := db.add("a", ["int":12, "str":"Cool #15"])
+
+    verifyEq(db.find("a", "str", "foobar"), null)
+    verifyEq(db.find("a", "str", "foobar", ["nocase":true]), a1)
+
+    verifyEq(db.find("a", "str", "cool #15"), null)
+    verifyEq(db.find("a", "str", "cool #15", ["nocase":true]), a2)
+
+    db.close
+  }
+
   // Void testFindAll()
   // {
   //   db := Bruno(tempDir) { log.level = LogLevel.debug }
