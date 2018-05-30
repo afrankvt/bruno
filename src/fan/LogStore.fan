@@ -92,9 +92,9 @@ internal class LogStore : Store
     {
       switch (op)
       {
-        case "add":    seg.append(bucket, rec)
-        case "update": seg.append(bucket, rec)  // TODO: only changes?
-        case "remove": seg.append(bucket, rec, true)
+        case "add":    seg.append(bucket, rec).sync
+        case "update": seg.append(bucket, rec).sync  // TODO: only changes?
+        case "remove": seg.append(bucket, rec, true).sync
         default: throw ArgErr("Unsupported op '$op'")
       }
     }
@@ -178,7 +178,7 @@ internal class LogStore : Store
           mseg.append(bname, rec)
         }
       }
-      mseg.close
+      mseg.sync.close
 
       // TODO: LogSegment.readEach method that can process a record at
       // a time to avoid having another copy in memory at the same time?

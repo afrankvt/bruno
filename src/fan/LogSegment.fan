@@ -149,13 +149,16 @@ internal class LogSegment
   ** Close this segment.
   This close()
   {
+    this.sync
     this.out?.close
     this.out = null
     return this
   }
 
-  ** Append the given record to this segment.
-  Void append(Str bucket, Rec rec, Bool rem := false)
+  ** Append the given record to this segment. Note that this method
+  ** leaves buffered content in OutStream so caller should be aware
+  ** if and when a `sync` is required.
+  This append(Str bucket, Rec rec, Bool rem := false)
   {
     buf.clear
     buf.print(bucket).write(0x00)
@@ -212,7 +215,15 @@ internal class LogSegment
     // TODO: check if out of disk space
 
     crc := buf.crc("CRC-32")
-    out.writeI4(buf.size).writeBuf(buf.seek(0)).writeI4(crc).flush.sync
+    out.writeI4(buf.size).writeBuf(buf.seek(0)).writeI4(crc)
+    return this
+  }
+
+  ** Flush any outstanding writes to disk.
+  This sync()
+  {
+    if (out != null) out.flush.sync
+    return this
   }
 
   private static const Int magic   := 0x4252_554E_4F4C_4F47   // BRUNOLOG
