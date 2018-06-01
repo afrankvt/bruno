@@ -162,6 +162,11 @@ internal class LogStore : Store
         LogSegment.read(f, bmap)
       }
 
+      // prune empty buckets since these will not get picked up
+      // during the verify vmap phase and throw off size checks
+      bkeys := bmap.keys.dup
+      bkeys.each |k| { if (bmap[k].recs.size == 0) bmap.remove(k) }
+
       // delete incomplete merge if found
       mfile := inactive.first.parent + `data.merge`
       if (mfile.exists) mfile.delete
@@ -188,11 +193,11 @@ internal class LogStore : Store
       LogSegment.read(mfile, vmap)
 
       // verify
-      if (bmap.size != vmap.size) throw Err()
+      if (bmap.size != vmap.size) throw Err("$bmap.size != $vmap.size")
       bmap.each |mbucket, name|
       {
         vbucket := vmap[name]
-        if (!mbucket.verifyEq(vbucket)) throw Err()
+        if (!mbucket.verifyEq(vbucket)) throw Err("bucket verify failed for '$name'")
       }
 
       // verification passed, commit merge, and remove old segments
