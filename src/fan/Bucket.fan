@@ -59,8 +59,8 @@ internal class Bucket
     old := map.get(rec.id)
     if (old == null) throw ArgErr("$name: Rec not found { id=$rec.id }")
 
-    // merge tags
-    copy := rec.tags.rw
+    // merge tags; always merge against copy in database
+    copy := old.tags.rw
     tags.each |v,k|
     {
       if (v == null) copy.remove(k)
