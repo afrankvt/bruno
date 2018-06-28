@@ -133,12 +133,13 @@ class BrunoTest : Test
     verifyEq(db.get("a", 1).tags["int"], 3)
     verifyEq(db.get("a", 1).tags["str"], "foo")
 
-    oneUp := db.update("a", one, ["int":7, "str":"bar"])
+    oneUp := db.update("a", one, ["int":7, "str":"bar", "x":false])
     verifyEq(db.recs("a").size,  1)
     verifyEq(db.recs("a")[1], oneUp)
     verifyEq(db.get("a", 1),  oneUp)
     verifyEq(db.get("a", 1).tags["int"], 7)
     verifyEq(db.get("a", 1).tags["str"], "bar")
+    verifyEq(db.get("a", 1).tags["x"],   false)
 
     // rec not found
     verifyErr(ArgErr#) { db.update("a", Rec(8, 0, [:]), ["int":2]) }
@@ -156,6 +157,15 @@ class BrunoTest : Test
     verifyEq(db.get("a", 1),  oneUp)
     verifyEq(db.get("a", 1).tags["int"], 7)
     verifyEq(db.get("a", 1).tags["str"], "bar")
+
+    // test using update with out-of-date copy
+    oneUp2 := db.update("a", one, ["int":5])
+    verifyEq(db.recs("a").size,  1)
+    verifyEq(db.recs("a")[1], oneUp2)
+    verifyEq(db.get("a", 1),  oneUp2)
+    verifyEq(db.get("a", 1).tags["int"], 5)
+    verifyEq(db.get("a", 1).tags["str"], "bar")
+    verifyEq(db.get("a", 1).tags["x"],   false)
 
     db.close
   }
